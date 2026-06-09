@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Salin – Pangkat 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --sienna:   #8B3A1C;
+  --gold:     #C8922A;
+  --ivory:    #F7F0E3;
+  --cream:    #EDE3D0;
+  --forest:   #2D5016;
+  --charcoal: #1E1A14;
+  --mist:     #F2EBD9;
+  --white:    #FFFDF8;
+  --shadow:   rgba(30,26,20,.18);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Lora', Georgia, serif;
+  --font-ui:      'Inter', sans-serif;
+
+  --radius: 6px;
+  --transition: .22s ease;
+}
+
+/* ─── RESET ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--ivory);
+  color: var(--charcoal);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+img { display: block; max-width: 100%; }
+button { cursor: pointer; font-family: var(--font-ui); border: none; background: none; }
+a { color: var(--sienna); }
+
+/* ─── SKIP LINK (accessibility) ─────────────────────── */
+.skip-link {
+  position: absolute; top: -100px; left: 1rem;
+  background: var(--sienna); color: var(--white);
+  padding: .4rem 1rem; border-radius: 0 0 var(--radius) var(--radius);
+  font-family: var(--font-ui); font-size: .85rem; z-index: 9999;
+  transition: top .2s;
+}
+.skip-link:focus { top: 0; }
+
+/* ─── WOVEN DIVIDER (signature element) ─────────────── */
+.banig {
+  width: 100%; height: 20px; overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--gold)   0 6px,
+      var(--sienna) 6px 12px,
+      var(--forest) 12px 18px,
+      var(--gold)   18px 24px
+    );
+  opacity: .75;
+}
+
+/* ─── NAV ────────────────────────────────────────────── */
+nav {
+  background: var(--sienna);
+  color: var(--white);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 2rem; gap: 1rem;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.3rem; letter-spacing: .04em;
+  color: var(--gold);
+}
+.nav-links { display: flex; gap: .5rem; flex-wrap: wrap; }
+.nav-links button {
+  color: var(--ivory); font-size: .85rem; font-weight: 500;
+  padding: .35rem .85rem; border-radius: 20px;
+  border: 1.5px solid transparent;
+  transition: background var(--transition), border-color var(--transition);
+}
+.nav-links button:hover,
+.nav-links button.active {
+  background: var(--gold); color: var(--charcoal);
+  border-color: var(--gold);
+}
+
+/* ─── SCREENS ────────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ─── HOME ───────────────────────────────────────────── */
+#home {
+  min-height: calc(100vh - 56px);
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(200,146,42,.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(139,58,28,.10) 0%, transparent 60%),
+    var(--ivory);
+}
+
+.home-hero {
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+  position: relative;
+}
+
+/* Parol-star decoration */
+.sun-deco {
+  font-size: 4rem; line-height: 1;
+  animation: slowspin 30s linear infinite;
+  display: inline-block;
+  color: var(--gold);
+  filter: drop-shadow(0 0 18px rgba(200,146,42,.4));
+}
+@keyframes slowspin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .sun-deco { animation: none; }
+}
+
+.home-eyebrow {
+  font-family: var(--font-ui); font-size: .78rem;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--sienna); margin-top: .75rem;
+}
+.home-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  color: var(--charcoal);
+  line-height: 1.15;
+  margin: .5rem 0;
+}
+.home-title span { color: var(--sienna); }
+.home-subtitle {
+  font-size: 1rem; color: #5a4d38; max-width: 520px; margin: 0 auto 2.5rem;
+  font-style: italic;
+}
+
+/* Group card */
+.group-card {
+  background: var(--white);
+  border: 2px solid var(--cream);
+  border-top: 4px solid var(--gold);
+  border-radius: var(--radius);
+  max-width: 640px; margin: 0 auto 3.5rem;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 24px var(--shadow);
+  text-align: left;
+}
+.group-card h2 {
+  font-family: var(--font-display); font-size: 1.5rem;
+  color: var(--sienna); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.group-card h2::before {
+  content: '';
+  display: inline-block; width: 28px; height: 3px;
+  background: var(--gold); border-radius: 2px; flex-shrink: 0;
+}
+.members-grid {
+  columns: 2; column-gap: 1.5rem;
+  list-style: none; padding: 0;
+}
+.members-grid li {
+  font-family: var(--font-ui); font-size: .92rem;
+  padding: .3rem 0; color: var(--charcoal);
+  break-inside: avoid;
+  display: flex; align-items: center; gap: .5rem;
+}
+.members-grid li::before {
+  content: '◆'; color: var(--gold); font-size: .55rem; flex-shrink: 0;
+}
+
+/* Work cards */
+.works-section { padding: 0 2rem 5rem; max-width: 900px; margin: 0 auto; }
+.works-heading {
+  font-family: var(--font-display); font-size: 1.3rem;
+  text-align: center; color: var(--sienna);
+  margin-bottom: 1.5rem; position: relative;
+}
+.works-heading::before, .works-heading::after {
+  content: '◈';
+  color: var(--gold); margin: 0 .8rem; opacity: .7;
+}
+.works-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media (max-width: 600px) { .works-grid { grid-template-columns: 1fr; } }
+
+.work-card {
+  background: var(--white);
+  border: 1.5px solid var(--cream);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px var(--shadow);
+  display: flex; flex-direction: column; gap: .75rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+  cursor: pointer;
+}
+.work-card:hover, .work-card:focus-within {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px var(--shadow);
+}
+.work-card-tag {
+  font-family: var(--font-ui); font-size: .7rem;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: var(--white); background: var(--forest);
+  padding: .2rem .6rem; border-radius: 3px;
+  align-self: flex-start;
+}
+.work-card-tag.south { background: var(--sienna); }
+.work-card h3 {
+  font-family: var(--font-display); font-size: 1.1rem; color: var(--charcoal);
+}
+.work-card p {
+  font-size: .875rem; color: #5a4d38; font-style: italic;
+}
+.work-card-btn {
+  margin-top: auto;
+  font-family: var(--font-ui); font-size: .82rem;
+  color: var(--sienna); font-weight: 600;
+  display: flex; align-items: center; gap: .35rem;
+}
+.work-card-btn::after { content: '→'; transition: transform var(--transition); }
+.work-card:hover .work-card-btn::after { transform: translateX(4px); }
+
+/* ─── PIECE SCREEN ───────────────────────────────────── */
+.piece-screen { padding: 3rem 2rem 6rem; max-width: 900px; margin: 0 auto; }
+
+.piece-header { margin-bottom: 2.5rem; }
+.back-btn {
+  font-family: var(--font-ui); font-size: .85rem;
+  color: var(--sienna); font-weight: 500;
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin-bottom: 1.5rem;
+  padding: .3rem 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition);
+}
+.back-btn:hover { border-color: var(--sienna); }
+.back-btn::before { content: '←'; }
+
+.piece-eyebrow {
+  font-family: var(--font-ui); font-size: .72rem;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: .4rem;
+}
+.piece-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--charcoal); line-height: 1.2;
+}
+.piece-author {
+  font-style: italic; color: var(--sienna); margin-top: .3rem;
+  font-size: 1rem;
+}
+
+/* Toggle bar */
+.toggle-bar {
+  display: flex; gap: 0; margin-bottom: 2rem;
+  border: 2px solid var(--sienna); border-radius: 30px;
+  overflow: hidden; width: fit-content;
+}
+.toggle-btn {
+  padding: .5rem 1.4rem; font-size: .88rem;
+  font-weight: 500; font-family: var(--font-ui);
+  color: var(--sienna); background: var(--white);
+  transition: background var(--transition), color var(--transition);
+  border-radius: 0;
+}
+.toggle-btn.active {
+  background: var(--sienna); color: var(--white);
+}
+.toggle-btn:first-child { border-radius: 28px 0 0 28px; }
+.toggle-btn:last-child  { border-radius: 0 28px 28px 0; }
+
+/* Content panes */
+.content-pane { display: none; }
+.content-pane.active { display: block; }
+
+/* Prose styling */
+.prose {
+  background: var(--white);
+  border: 1.5px solid var(--cream);
+  border-radius: var(--radius);
+  padding: 2.5rem 3rem;
+  box-shadow: 0 2px 12px var(--shadow);
+  font-size: 1.05rem; line-height: 1.9;
+}
+@media (max-width: 600px) { .prose { padding: 1.5rem; } }
+
+.prose p { margin-bottom: 1.2rem; }
+.prose p:last-child { margin-bottom: 0; }
+
+/* Lyrics specific */
+.lyric-block { margin-bottom: 1.8rem; }
+.section-label {
+  font-family: var(--font-ui); font-size: .72rem;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600;
+  margin-bottom: .4rem;
+}
+.lyric-line { display: block; line-height: 1.65; }
+.lyric-bridge {
+  font-style: italic; color: #6b5b44; text-align: center;
+}
+
+/* ─── ANNOTATIONS ────────────────────────────────────── */
+.annotated {
+  position: relative;
+  border-bottom: 2px dashed var(--gold);
+  cursor: help;
+  color: var(--sienna);
+  font-weight: 600;
+}
+.annotated:focus { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 2px; }
+
+.annotation-bubble {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 10px); left: 50%;
+  transform: translateX(-50%);
+  background: var(--charcoal);
+  color: var(--ivory);
+  font-family: var(--font-ui);
+  font-size: .82rem; line-height: 1.55;
+  padding: .7rem 1rem;
+  border-radius: var(--radius);
+  width: 240px; max-width: 90vw;
+  z-index: 200;
+  box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  pointer-events: none;
+}
+.annotation-bubble::after {
+  content: '';
+  position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: var(--charcoal);
+}
+.annotated:hover .annotation-bubble,
+.annotated:focus .annotation-bubble,
+.annotated.open .annotation-bubble {
+  display: block;
+}
+
+.a11y-note {
+  background: var(--mist);
+  border-left: 4px solid var(--forest);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: .75rem 1rem;
+  font-family: var(--font-ui);
+  font-size: .82rem; color: #3a3228;
+  margin-bottom: 2rem;
+  display: flex; align-items: flex-start; gap: .6rem;
+}
+.a11y-note::before {
+  content: 'ℹ';
+  font-size: 1rem; color: var(--forest); flex-shrink: 0;
+}
+
+footer {
+  background: var(--charcoal); color: var(--cream);
+  text-align: center; padding: 1.5rem 2rem;
+  font-family: var(--font-ui); font-size: .8rem;
+}
+footer span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Tumalon sa nilalaman</a>
+
+<!-- NAV -->
+<nav role="navigation" aria-label="Pangunahing nabigasyon">
+  <div class="nav-logo" aria-label="Salin — Pangkat 3">Salin ◈</div>
+  <div class="nav-links" role="menubar">
+    <button role="menuitem" class="active" onclick="showScreen('home')" aria-current="page">Tahanan</button>
+    <button role="menuitem" onclick="showScreen('north')">Global North</button>
+    <button role="menuitem" onclick="showScreen('south')">Global South</button>
+  </div>
+</nav>
+
+<div class="banig" role="presentation" aria-hidden="true"></div>
+
+<main id="main-content">
+
+<!-- ════════════════════ HOME ════════════════════ -->
+<section id="home" class="screen active" aria-label="Pahina ng Tahanan">
+  <div class="home-hero">
+    <div class="sun-deco" aria-hidden="true">✦</div>
+    <p class="home-eyebrow">Pangkat 3 · Pagsasalin Pinal na Kahingian</p>
+    <h1 class="home-title"><span>Salin</span><br>Mga Akda ng Pangkat 3</h1>
+  </div>
+
+  <div class="group-card" role="region" aria-label="Mga Miyembro ng Pangkat">
+    <h2>Pangkat 3</h2>
+    <ul class="members-grid" aria-label="Listahan ng mga miyembro">
+      <li>Amancio, Kalel A.</li>
+      <li>Antig, Klent Leo P.</li>
+      <li>Bernardo, Ivan Louise S.</li>
+      <li>Frias, Lawrence S.</li>
+      <li>Mariano, Mhar Jaycee T.</li>
+      <li>Navarro, Jenrick H.</li>
+      <li>Trinidad, Kyla Mae G.</li>
+      <li>Tualla, Bien Francis B.</li>
+    </ul>
+  </div>
+
+  <div class="works-section">
+    <h2 class="works-heading">Mga Akda</h2>
+    <div class="works-grid">
+      <article class="work-card" tabindex="0" role="button" onclick="showScreen('north')" onkeydown="if(event.key==='Enter')showScreen('north')" aria-label="Buksan ang Salin Global North: The Aged Mother">
+        <span class="work-card-tag">Global North</span>
+        <h3>The Aged Mother</h3>
+        <p>Isang kathang-isip na kuwento mula sa Hapon ni Matsuo Basho — isang salaysay ng pagmamahal ng anak sa kanyang ina.</p>
+        <span class="work-card-btn" aria-hidden="true">Basahin</span>
+      </article>
+      <article class="work-card" tabindex="0" role="button" onclick="showScreen('south')" onkeydown="if(event.key==='Enter')showScreen('south')" aria-label="Buksan ang Salin Global South: With a Smile ng Eraserheads">
+        <span class="work-card-tag south">Global South</span>
+        <h3>With a Smile</h3>
+        <p>Isang awit ng pag-asa mula sa Eraserheads — isang mensahe ng lakas at ngiti kahit sa gitna ng kahirapan.</p>
+        <span class="work-card-btn" aria-hidden="true">Basahin</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ GLOBAL NORTH ════════════════════ -->
+<section id="north" class="screen" aria-label="Salin Global North: The Aged Mother">
+  <div class="piece-screen">
+    <div class="piece-header">
+      <button class="back-btn" onclick="showScreen('home')" aria-label="Bumalik sa Tahanan">Bumalik</button>
+      <p class="piece-eyebrow">Global North · Kuwento</p>
+      <h1 class="piece-title">The Aged Mother</h1>
+      <p class="piece-author">ni Matsuo Basho</p>
+    </div>
+
+    <div class="a11y-note" role="note" aria-label="Accessibility na tala">
+      Mag-hover o mag-click sa mga salitang may guhit upang makita ang mga anotasyon. Maaari ring gamitin ang keyboard (Tab + Enter).
+    </div>
+
+    <div class="toggle-bar" role="group" aria-label="Piliin ang wika">
+      <button class="toggle-btn active" id="north-orig-btn" onclick="togglePiece('north','orig')" aria-pressed="true">Orihinal</button>
+      <button class="toggle-btn" id="north-salin-btn" onclick="togglePiece('north','salin')" aria-pressed="false">Salin</button>
+    </div>
+
+    <!-- ORIGINAL -->
+    <div id="north-orig" class="content-pane active" aria-label="Orihinal na teksto">
+      <div class="prose" lang="en">
+        <p>Long, long ago there lived at the foot of the mountain a poor farmer and his <span class="annotated" tabindex="0" role="note" aria-describedby="ann-aged">aged, widowed mother<span class="annotation-bubble" id="ann-aged" role="tooltip">The story centers on the deep bond between a son and his elderly mother — a central value in traditional East Asian culture.</span></span>. They owned a bit of land which supplied them with food, and they were humble, peaceful, and happy.</p>
+
+        <p>Shining was governed by a <span class="annotated" tabindex="0" role="note">despotic leader<span class="annotation-bubble" role="tooltip">A ruler who holds absolute and often cruel power over his people. His fear of old age drives the tragic decree of the story.</span></span> who though a warrior, had a great and cowardly shrinking from anything suggestive of failing health and strength. This caused him to send out a cruel proclamation. The entire province was given strict orders to immediately put to death all aged people. Those were barbarous days, and the custom of <span class="annotated" tabindex="0" role="note">abandoning old people<span class="annotation-bubble" role="tooltip">"Ubasute" (姥捨) — a legendary Japanese practice of leaving elderly relatives on a mountain to die. Historians debate whether this was actually practiced or purely mythological.</span></span> to die was not uncommon.</p>
+
+        <p>The poor farmer loved his aged mother with tender reverence, and the order filled his heart with sorrow. But no one ever thought twice about obeying the mandate of the governor, so with many deep and hopeless sighs, the youth prepared for what at that time was considered the kindest mode of death.</p>
+
+        <p>Just at sundown, when his day's work was ended, he took a quantity of <span class="annotated" tabindex="0" role="note">unwhitened rice<span class="annotation-bubble" role="tooltip">Brown or unpolished rice — the staple of the poor. Polished white rice was considered a luxury of the wealthy in feudal Japan.</span></span> which was the principal food for the poor, and he cooked, dried it, and tied it in a square cloth, which he swung in a bundle around his neck along with a gourd filled with cool, sweet water.</p>
+
+        <p>Then he lifted his helpless old mother to his back and started on his painful journey up the mountain. The road was long and steep; the narrow road was crossed and re-crossed by many paths made by the hunters and woodcutters. In some place, they lost and confused, but he gave no heed. On he went, climbing blindly upward — ever upward towards the high bare summit of what is known as <span class="annotated" tabindex="0" role="note">Obatsuyama<span class="annotation-bubble" role="tooltip">"Obasuteyama" (姥捨山) — literally "Mountain of the Discarded Old Women." A real mountain in Nagano Prefecture, Japan, associated with this legend.</span></span>, the mountain of the "abandoning of the aged."</p>
+
+        <p>The eyes of the old mother were not so dim but that they noted the reckless hastening from one path to another, and her loving heart grew anxious. Her son did not know the mountain's many paths and his return might be one of danger, so she stretched forth her hand and <span class="annotated" tabindex="0" role="note">snapping the twigs from brushes<span class="annotation-bubble" role="tooltip">The mother, even in her final moments, thinks only of her son's safety — secretly leaving a trail of twigs so he can find his way home. This act is the emotional heart of the story.</span></span> as they passed, she quietly dropped a handful every few steps of the way.</p>
+
+        <p>At last the summit was reached. Weary and heart sick, the youth gently released his burden and silently prepared a place of comfort as his last duty to the loved one. Gathering fallen pine needles, he made a soft cushion and tenderly lifted his old mother onto it. He wrapped her padded coat more closely about the stooping shoulders and with tearful eyes and an aching heart he said farewell.</p>
+
+        <p>The trembling mother's voice was full of unselfish love as she gave her last injunction. "Let not thine eyes be blinded, my son." She said. "The mountain road is full of dangers. Look carefully and follow the path which holds the <span class="annotated" tabindex="0" role="note">piles of twigs<span class="annotation-bubble" role="tooltip">The trail the mother made — her final, selfless gift to her son. In Filipino values, this mirrors the concept of "pagmamahal ng magulang" — a parent's boundless love.</span></span>. They will guide you to the familiar path farther down."</p>
+
+        <p>The son's surprised eyes looked back over the path, then at the poor old, shriveled hands all scratched and soiled by their work of love. His heart broke within and bowing to the ground, he cried aloud: "Oh, Honorable mother, your kindness breaks my heart! I will not leave you. Together we will follow the path of twigs, and together we will die!"</p>
+
+        <p>Once more he shouldered his burden and hastened down the path, through the shadows and the moonlight, to the little hut in the valley. Beneath the kitchen floor was a walled closet for food, which was covered and hidden from view. There the son hid his mother, supplying her with everything she needed, continually watching and fearing she would be discovered.</p>
+
+        <p>Time passed, and he was beginning to feel safe when again the governor sent forth heralds bearing an unreasonable order. His demand was that his subjects should present him with a <span class="annotated" tabindex="0" role="note">rope of ashes<span class="annotation-bubble" role="tooltip">An impossible task meant to test or humiliate the people. The governor's arrogance is contrasted with the mother's wisdom — a classic literary device showing the value of age and experience over brute power.</span></span>.</p>
+
+        <p>The entire province trembled with dread. One night, in great distress, the son whispered the news to his hidden mother. "Wait!" she said. "I will think. I will think." On the second day she told him what to do. "Make rope of twisted straw," she said. "Then stretch it upon a row of flat stones and burn it on a windless night." He called the people together and did as she said and when the blaze died down, there upon the stones, with every twist and fiber showing perfectly, lay a rope of ashes.</p>
+
+        <p>The governor was pleased at the wit of the youth and praised greatly, but he demanded to know where he had obtained his wisdom. "Alas! Alas!" cried the farmer, "the truth must be told!" and with deep bows he related his story.</p>
+
+        <p>The governor listened and then meditated in silence. Finally he lifted his head. "Shining needs more than strength of youth," he said gravely. "Ah, that I should have forgotten the well-known saying, <span class="annotated" tabindex="0" role="note">'with the crown of snow, there cometh wisdom!'<span class="annotation-bubble" role="tooltip">A poetic metaphor — white hair (like snow on a mountaintop) symbolizes a life fully lived and the wisdom that comes with age. This is the story's moral.</span></span>" That very hour the cruel law was abolished, and custom drifted into as far a past that only legends remain.</p>
+      </div>
+    </div>
+
+    <!-- SALIN -->
+    <div id="north-salin" class="content-pane" aria-label="Salin sa Filipino">
+      <div class="prose" lang="fil">
+        <p>Noong unang panahon, may isang mahirap na magsasaka kasama ang kaniyang <span class="annotated" tabindex="0" role="note">matanda at biyudang ina<span class="annotation-bubble" role="tooltip">Ang kuwento ay nakasentro sa malalim na ugnayan ng anak at ng kanyang matandang ina — isang pangunahing pagpapahalaga sa tradisyonal na kulturang Silangang Asyano.</span></span> na naninirahan sa paanan ng bundok. Nagmamay-ari sila ng kaunting lupa na nagbibigay sa kanila ng pagkain, at sila'y namumihay ng mapagkumbaba, mapayapa at masaya.</p>
+
+        <p>Ang Shining ay pinamumunuan ng isang <span class="annotated" tabindex="0" role="note">malupit na pinuno<span class="annotation-bubble" role="tooltip">Isang pinuno na humahawak ng ganap at madalas na malupit na kapangyarihan sa kanyang mga mamamayan. Ang kanyang takot sa pagtanda ang dahilan ng trahedya ng kwento.</span></span>, bagaman isang mandirigma, ay may matinding takot at kaduwagan sa anumang bagay na nagpapahiwatig ng paghina ng kalusugan at lakas. Dahil dito, nagpalabas siya ng isang malupit na proklamasyon. Ang buong probinsiya ay binigyan ng mahigpit na utos na agarang pagpapapatay sa lahat ng mga matatandang tao.</p>
+
+        <p>Masaklap ang karanasan noong mga panahong iyon, at ang kaugaliang <span class="annotated" tabindex="0" role="note">pag-iiwan sa mga matatanda<span class="annotation-bubble" role="tooltip">"Ubasute" (姥捨) — isang alamat na kaugalian sa Hapon ng pag-iiwan ng matatandang kamag-anak sa bundok. Pinagtatalunan ng mga mananalaysay kung tunay ba itong isinagawa o mitolohiya lamang.</span></span> upang mamatay ay hindi na bago. Mahal ng mahirap na magsasaka ang kanyang matandang ina nang may buong-pusong paggalang, kaya naman ang kautusang ito ay nagpuno sa kanyang puso ng pighati.</p>
+
+        <p>Nang mag-dapit-hapon na, pagkatapos ng kanyang araw-araw na gawain, kumuha siya ng isang dakot ng <span class="annotated" tabindex="0" role="note">hindi pa nilinis na bigas<span class="annotation-bubble" role="tooltip">Kayumanggi o hindi pa pinakintab na bigas — ang pagkain ng mga dukha. Ang puting bigas ay itinuturing na luho ng mayayaman sa pyudal na Hapon.</span></span> — ang pangunahing pagkain ng mga dukha — at ito ay niluto, pinatuyo, at ibinuhol sa isang hugis parisukat na tela.</p>
+
+        <p>Pagkatapos ay isinakay niya ang kanyang kaawa-awang matandang ina sa kanyang likod at sinimulan ang kanyang mahirap na paglalakbay paakyat ng bundok. Sa wakas ay naabot nila ang tuktok ng bundok na kilala bilang <span class="annotated" tabindex="0" role="note">Obatsuyama<span class="annotation-bubble" role="tooltip">"Obasuteyama" (姥捨山) — literal na "Bundok ng Mga Iniwang Matandang Babae." Isang tunay na bundok sa Nagano Prefecture, Hapon, na kaugnay ng alamat na ito.</span></span>, ang bundok na timaguriang "pag-abandona sa matatanda."</p>
+
+        <p>Ang mga mata ng matandang ina ay hindi pa ganoon kalamlam upang hindi mapansin ang hindi maingat na pagtakbo mula sa isang daan patungo sa isa pa. Kaya't iniunat niya ang kanyang kamay at tahimik na <span class="annotated" tabindex="0" role="note">pinipitas ang mga sanga ng mga maliit na halaman<span class="annotation-bubble" role="tooltip">Ang ina, kahit sa kanyang huling sandali, nag-iisip lamang sa kaligtasan ng kanyang anak — lihim na nag-iiwan ng bakas ng mga sanga upang mahanap niya ang daan pauwi. Ito ang emosyonal na puso ng kwento.</span></span> habang sila ay dumadaan, at dahan-dahang naghuhulog ng isang dakot tuwing ilang hakbang.</p>
+
+        <p>Sa wakas ay naabot na nila ang tuktok. Pagod at puno ng kalungkutan sa puso, maingat na ibinaba ng anak ang kanyang dalahin at tahimik na naghanda ng isang komportableng lugar bilang kanyang huling tungkulin sa kanyang pinakamamahal.</p>
+
+        <p>Nanginginig ang tinig ng ina at puno ito ng walang pag-iimbot na pagmamahal habang ibinibigay niya ang kanyang huling habilin. "Huwag mong hayaang mabulag ang iyong mga mata, anak," sabi niya. "Ang daan sa bundok ay puno ng panganib. Sundan mo ang landas na may mga <span class="annotated" tabindex="0" role="note">tumpok ng mga sanga<span class="annotation-bubble" role="tooltip">Ang bakas na ginawa ng ina — ang kanyang huling, walang pag-iimbot na kaloob sa kanyang anak. Sa mga pagpapahalaga ng Filipino, ito ay sumasalamin sa konsepto ng "pagmamahal ng magulang."</span></span>."</p>
+
+        <p>Napatingin ang anak sa dinaanang landas, saka sa kaawa-awang matanda at kulubot na mga kamay ng kanyang ina na puno ng gasgas at dumi dahil sa kanilang ginawa bilang tanda ng pagmamahal. Sinaktan ng matinding damdamin ang kanyang puso at siya'y yumukod sa lupa habang malakas na umiiyak. "O marangal kong ina, ang iyong kabutihan ay tumatagos sa aking puso! Hindi kita iiwan."</p>
+
+        <p>Muli niyang pinasan ang kanyang dalahin at dali-daling bumaba sa daan patungo sa maliit nilang kubo sa lambak. Doon itinago ng anak ang kanyang ina, binibigyan siya ng lahat ng kanyang pangangailangan.</p>
+
+        <p>Lumipas ang panahon, at muling nagpadala ang gobernador ng mga tagapagbalita na may dalang utos na dalhan siya ng isang <span class="annotated" tabindex="0" role="note">lubid na yari sa abo<span class="annotation-bubble" role="tooltip">Isang imposibleng gawain upang subukan o mapahiya ang mga tao. Ang pagmamataas ng gobernador ay inihahambing sa karunungan ng ina — isang klasikong pampanitikang pamamaraan na nagpapakita ng halaga ng gulang at karanasan kaysa sa kapangyarihang pisikal.</span></span>.</p>
+
+        <p>Isang gabi, ibinulong ng anak ang balita sa kanyang nakatagong ina. "Maghintay ka," sabi nito. "Gumawa ka ng lubid mula sa pinilipit na dayami. Pagkatapos ay iunat mo ito sa ibabaw ng mga patag na bato at sunugin sa gabing walang hangin." Ginawa ng anak ang sinabi at nang tuluyang mamatay ang apoy, nakita nila sa ibabaw ng mga bato ang isang lubid ng maputing abo.</p>
+
+        <p>Nasiyahan ang gobernador at nais niyang malaman kung saan nakuha ng binata ang ganoong karunungan. Isinalaysay ng anak ang buong pangyayari. Tahimik na nakinig ang gobernador at sa wakas ay itinaas niya ang kanyang ulo. "Ang Shinano ay nangangailangan ng higit pa sa lakas ng kabataan. Kasabay ng <span class="annotated" tabindex="0" role="note">puting korona ng niyebe ay dumarating ang karunungan<span class="annotation-bubble" role="tooltip">Isang makatulang metapora — ang puting buhok (tulad ng niyebe sa tuktok ng bundok) ay sumasagisag sa isang buhay na ganap na nabuhay at ang karunungang kasama nito. Ito ang aral ng kwento.</span></span>!" Sa mismong oras na iyon ay pinawalang-bisa ang malupit na batas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ GLOBAL SOUTH ════════════════════ -->
+<section id="south" class="screen" aria-label="Salin Global South: With a Smile">
+  <div class="piece-screen">
+    <div class="piece-header">
+      <button class="back-btn" onclick="showScreen('home')" aria-label="Bumalik sa Tahanan">Bumalik</button>
+      <p class="piece-eyebrow">Global South · Awit</p>
+      <h1 class="piece-title">With a Smile</h1>
+      <p class="piece-author">Eraserheads</p>
+    </div>
+
+    <div class="a11y-note" role="note" aria-label="Accessibility na tala">
+      Mag-hover o mag-click sa mga salitang may guhit upang makita ang mga anotasyon. Maaari ring gamitin ang keyboard (Tab + Enter).
+    </div>
+
+    <div class="toggle-bar" role="group" aria-label="Piliin ang wika">
+      <button class="toggle-btn active" id="south-orig-btn" onclick="togglePiece('south','orig')" aria-pressed="true">Orihinal</button>
+      <button class="toggle-btn" id="south-salin-btn" onclick="togglePiece('south','salin')" aria-pressed="false">Salin</button>
+    </div>
+
+    <!-- ORIGINAL -->
+    <div id="south-orig" class="content-pane active" aria-label="Orihinal na teksto">
+      <div class="prose" lang="en">
+        <div class="lyric-block">
+          <span class="lyric-line">Lift your head, baby, don't be scared</span>
+          <span class="lyric-line">Of the things that could go wrong along the way</span>
+          <span class="lyric-line">You'll get by with a smile</span>
+          <span class="lyric-line">You can't win at everything but you can try</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Verse 1]</p>
+          <span class="lyric-line">Baby, you don't have to worry</span>
+          <span class="lyric-line">'Cause there ain't no need to hurry</span>
+          <span class="lyric-line">No one ever said that there's an easy way</span>
+          <span class="lyric-line">When they're closing all their doors</span>
+          <span class="lyric-line">And they don't want you anymore</span>
+          <span class="lyric-line">It sounds funny but I'll say it anyway</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Chorus]</p>
+          <span class="lyric-line">Girl, I'll stay through the bad times</span>
+          <span class="lyric-line">Even if I have to <span class="annotated" tabindex="0" role="note">fetch you everyday<span class="annotation-bubble" role="tooltip">"Fetch" — the act of picking someone up. In Filipino culture, this reflects the courtship tradition of "ligaw," where a man shows devotion by accompanying his partner daily.</span></span></span>
+          <span class="lyric-line">We'll get by with a smile</span>
+          <span class="lyric-line">You can never be too happy in this life</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Verse 2]</p>
+          <span class="lyric-line">'Cause in a world where everybody</span>
+          <span class="lyric-line"><span class="annotated" tabindex="0" role="note">Hates a happy ending story<span class="annotation-bubble" role="tooltip">A commentary on cynicism in modern society — the idea that genuine happiness or optimism is seen as naive. The Eraserheads push back against this with the song's core message.</span></span></span>
+          <span class="lyric-line">It's a wonder love can make the world go round</span>
+          <span class="lyric-line">But don't let it bring you down</span>
+          <span class="lyric-line">And turn your face into a frown</span>
+          <span class="lyric-line">Get along with a little prayer and a song</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Bridge]</p>
+          <span class="lyric-line lyric-bridge">(Too, doo-doo-doo)</span>
+          <span class="lyric-line lyric-bridge">(Too, doo-doo-doo)</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Verse 2 — Ulit]</p>
+          <span class="lyric-line">'Cause in a world where everybody</span>
+          <span class="lyric-line">Hates a happy ending story</span>
+          <span class="lyric-line">It's a wonder love can make the world go round</span>
+          <span class="lyric-line">But don't let it bring you down</span>
+          <span class="lyric-line">And turn your face into a frown</span>
+          <span class="lyric-line">Get along with a little prayer and a song</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Chorus]</p>
+          <span class="lyric-line">Lift your head, baby, don't be scared</span>
+          <span class="lyric-line">Of the things that could go wrong along the way</span>
+          <span class="lyric-line">You'll get by with a smile</span>
+          <span class="lyric-line"><span class="annotated" tabindex="0" role="note">So now it's time to kiss away those tears, goodbye<span class="annotation-bubble" role="tooltip">A tender farewell to sadness — the emotional climax of the song. The act of "kissing away tears" is an intimate gesture that transforms grief into hope.</span></span></span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Outro]</p>
+          <span class="lyric-line lyric-bridge">(Too, doo-doo-doo) Let me hear you sing it</span>
+          <span class="lyric-line lyric-bridge">(Too, doo-doo-doo)</span>
+          <span class="lyric-line lyric-bridge">With a smile</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SALIN -->
+    <div id="south-salin" class="content-pane" aria-label="Salin sa Filipino">
+      <div class="prose" lang="fil">
+        <div class="lyric-block">
+          <span class="lyric-line">Tumingala, huwag kang matakot</span>
+          <span class="lyric-line">Sa mga bagay na maaaring magkamali habang nasa daan</span>
+          <span class="lyric-line">Harapin ito ng may ngiti</span>
+          <span class="lyric-line">Hindi mo man makamit ang lahat, pero maaari kang sumubok</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Chorus 1]</p>
+          <span class="lyric-line">Oh bini, wag kang mag-alala</span>
+          <span class="lyric-line">Dahil pwede namang bagalan muna</span>
+          <span class="lyric-line">Wala namang nagsabi na madali ang lahat</span>
+          <span class="lyric-line">Kapag wala kanang mapuntahan</span>
+          <span class="lyric-line">At wala kanang makampihan</span>
+          <span class="lyric-line"><span class="annotated" tabindex="0" role="note">Nakakatawa itong sasabihin ko<span class="annotation-bubble" role="tooltip">Ang "It sounds funny but I'll say it anyway" ay isang matapang na pagpapahayag — ang pagsasabing "handa akong sumama sa'yo" kahit "kakatuwa" ito sa mata ng mundo. Salamin ito ng katapatan ng pag-ibig.</span></span></span>
+          <span class="lyric-line">Sinta, handa akong damayan ka</span>
+          <span class="lyric-line">Kahit araw-araw pa kitang kasama</span>
+          <span class="lyric-line">Kasama mo akong ngingiti</span>
+          <span class="lyric-line">Ang buhay ay hindi puro kasiyahan</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Chorus 2]</p>
+          <span class="lyric-line">Dahil sa mundong ito, <span class="annotated" tabindex="0" role="note">hindi lahat ay masayang istorya<span class="annotation-bubble" role="tooltip">Komentaryo sa sinis sa modernong lipunan — ang ideya na ang tunay na kaligayahan o optimismo ay itinuturing na naibabang. Tinutulan ito ng Eraserheads sa pangunahing mensahe ng kanta.</span></span></span>
+          <span class="lyric-line">Nakakamanghang isipin na kayang paikutin ng pag-ibig ang mundo</span>
+          <span class="lyric-line">Pero huwag kang magpapatalo</span>
+          <span class="lyric-line">At huwag hayaan na kumunot ang mukha</span>
+          <span class="lyric-line">Idaan mo lang sa munting dasal at musika</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Tulay]</p>
+          <span class="lyric-line lyric-bridge">(Too, doo-doo-doo)</span>
+          <span class="lyric-line lyric-bridge">(Too, doo-doo-doo)</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Ulit ng Chorus 2]</p>
+          <span class="lyric-line">Dahil sa mundong ito, hindi lahat ay masayang istorya</span>
+          <span class="lyric-line">Nakakamanghang isipin na kayang paikutin ng pag-ibig ang mundo</span>
+          <span class="lyric-line">Pero huwag kang magpapatalo</span>
+          <span class="lyric-line">At huwag hayaan na kumunot ang mukha</span>
+          <span class="lyric-line">Idaan mo lang sa munting dasal at musika</span>
+        </div>
+
+        <div class="lyric-block">
+          <p class="section-label">[Verse 3]</p>
+          <span class="lyric-line">Tumingala, huwag kang matakot</span>
+          <span class="lyric-line">Sa mga bagay na maaaring magkamali habang nasa daan</span>
+          <span class="lyric-line">Harapin ito ng may ngiti</span>
+          <span class="lyric-line"><span class="annotated" tabindex="0" role="note">Oras na para iwaski na ang lumbay<span class="annotation-bubble" role="tooltip">"Iwaski" — isang makulay na salitang Filipino na nangangahulugang "itapon" o "hayaan." Ang pagsasaling ito ay ginagamit ang mas matapang, mas Pilipinong salita kaysa literal na pagsasalin ng "kiss away those tears."</span></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="banig" role="presentation" aria-hidden="true"></div>
+<footer>
+  <p>Pangkat 3 &nbsp;·&nbsp; <span>Salin: Interaktibong Karanasan sa Pagbasa</span></p>
+</footer>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.setAttribute('aria-hidden', 'true');
+  });
+  const target = document.getElementById(id);
+  if (target) {
+    target.classList.add('active');
+    target.removeAttribute('aria-hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  // Update nav active state
+  document.querySelectorAll('.nav-links button').forEach(btn => {
+    btn.classList.remove('active');
+    btn.removeAttribute('aria-current');
+  });
+  const navMap = { home: 0, north: 1, south: 2 };
+  const idx = navMap[id];
+  if (idx !== undefined) {
+    const btn = document.querySelectorAll('.nav-links button')[idx];
+    if (btn) { btn.classList.add('active'); btn.setAttribute('aria-current', 'page'); }
+  }
+}
+
+function togglePiece(piece, mode) {
+  const origPane = document.getElementById(piece + '-orig');
+  const salinPane = document.getElementById(piece + '-salin');
+  const origBtn  = document.getElementById(piece + '-orig-btn');
+  const salinBtn = document.getElementById(piece + '-salin-btn');
+
+  if (mode === 'orig') {
+    origPane.classList.add('active');
+    salinPane.classList.remove('active');
+    origBtn.classList.add('active');
+    salinBtn.classList.remove('active');
+    origBtn.setAttribute('aria-pressed', 'true');
+    salinBtn.setAttribute('aria-pressed', 'false');
+  } else {
+    salinPane.classList.add('active');
+    origPane.classList.remove('active');
+    salinBtn.classList.add('active');
+    origBtn.classList.remove('active');
+    salinBtn.setAttribute('aria-pressed', 'true');
+    origBtn.setAttribute('aria-pressed', 'false');
+  }
+}
+
+// ─── ANNOTATIONS: click/touch toggle ─────────────────────
+document.addEventListener('click', function(e) {
+  const ann = e.target.closest('.annotated');
+  // Close all open ones first
+  document.querySelectorAll('.annotated.open').forEach(el => {
+    if (el !== ann) el.classList.remove('open');
+  });
+  if (ann) {
+    ann.classList.toggle('open');
+    e.stopPropagation();
+  }
+});
+
+// Close on outside click
+document.addEventListener('click', function() {
+  document.querySelectorAll('.annotated.open').forEach(el => el.classList.remove('open'));
+});
+
+// Keyboard: Enter/Space toggles annotation
+document.addEventListener('keydown', function(e) {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('annotated')) {
+    e.preventDefault();
+    e.target.classList.toggle('open');
+  }
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.annotated.open').forEach(el => el.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>
